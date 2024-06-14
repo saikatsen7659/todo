@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+       
+
+    <div class="container">
+        <div class="text-center">
+            <h2>Todo app</h2>
+        </div>
+
+        <div class="form mb-2">
+            <input id="nameInput" type="text">
+            <input id="authorInput" type="text">
+            <button id="saveBtn">Add</button>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              
+            </tbody>
+          </table>
+    </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit view</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input id="editName" type="text" class="form-control mb-2" placeholder="enter name">
+          <input id="editAuthor" type="text" class="form-control" placeholder="author name">
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closeBtn" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="editSave" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <script>
+        let tbody = document.getElementById('tbody');
+        let nameInput = document.getElementById('nameInput');
+        let authorInput = document.getElementById('authorInput');
+        let editName = document.getElementById('editName');
+        let editAuthor = document.getElementById('editAuthor');
+        let saveBtn = document.getElementById('saveBtn');
+        let editSave = document.getElementById('editSave');
+        let closeBtn = document.getElementById('closeBtn');
+        let count = 0;
+
+        function addRow(){
+            // prefill into modal
+            editName.value = nameInput.value;
+            editAuthor.value = authorInput.value;
+
+            ++count;
+            tbody.innerHTML += `
+            <tr id="row-id-${count}">
+                <td scope="row">${count}</td>
+                <td>${nameInput.value}</td>
+                <td>${authorInput.value}</td>
+                <td>
+                    <button onclick="editRow(${count})" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">edit</button>
+                    <button onclick="removeRow(${count})" class="btn btn-sm btn-danger">delete</button>
+                </td>
+                </tr>
+            `;
+        }
+
+        saveBtn.addEventListener('click', addRow);
+
+        function removeRow(count){
+            let getRowId = document.getElementById('row-id-' + count);
+            getRowId.remove();
+        }
+
+        function editRow(count){
+            editSave.setAttribute('data-id', count);
+            let getRowId = document.getElementById('row-id-' + count);
+        }
+
+        // edit
+        editSave.addEventListener('click', function(){
+            count = editSave.getAttribute('data-id');
+            let getRowId = document.getElementById('row-id-' + count);
+            nameInput.value = editName.value;
+            authorInput.value = editAuthor.value;
+            getRowId.innerHTML = `
+            <td scope="row">${count}</td>
+                <td>${editName.value}</td>
+                <td>${editAuthor.value}</td>
+                <td>
+                    <button onclick="editRow(${count})" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">edit</button>
+                    <button onclick="removeRow(${count})" class="btn btn-sm btn-danger">delete</button>
+                </td>
+            `;
+
+            closeBtn.click();
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>
